@@ -56,11 +56,17 @@ class ReservesScreen extends Component {
               onChangeText={address => this.setState({ address })}
               placeholder='Direccion'
             />
-            <TextInput
-              name='pax'
-              onChangeText={pax => this.setState({ pax })}
-              placeholder='Invitados'
-            />
+            <PickerContainer>
+              <Picker
+                selectedValue={this.state.pax}
+                onValueChange={(pax, itemIndex) =>
+                  this.setState({ pax: itemValue })
+                }
+              >
+                <Picker.Item label='Java' value='java' />
+                <Picker.Item label='JavaScript' value='js' />
+              </Picker>
+            </PickerContainer>
             <TextInput
               name='preferences'
               onChangeText={email => this.setState({ email })}
@@ -103,9 +109,9 @@ class ReservesScreen extends Component {
             />
             <PickerContainer>
               <Picker
-                selectedValue={this.state.language}
+                selectedValue={this.state.pax}
                 onValueChange={(itemValue, itemIndex) =>
-                  this.setState({ language: itemValue })
+                  this.setState({ pax: pax })
                 }
               >
                 <Picker.Item label='Java' value='java' />
