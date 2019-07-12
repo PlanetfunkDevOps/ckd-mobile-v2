@@ -109,8 +109,8 @@ SettingsStack.navigationOptions = {
 
 const TabNavigator = createBottomTabNavigator(
   {
-    ReservesStack,
     HomeStack,
+    ReservesStack,
     OrdersStack,
     SettingsStack
   },
