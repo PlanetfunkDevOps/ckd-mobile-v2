@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import { Dimensions } from "react-native";
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import { Dimensions } from 'react-native';
 
-const screenWidth = Dimensions.get("screen").width;
+const screenWidth = Dimensions.get('screen').width;
 
 function getCourseWidth(screenWidth) {
   var cardWidth = screenWidth - 40;
@@ -24,7 +24,7 @@ class Course extends Component {
   };
 
   componentDidMount() {
-    Dimensions.addEventListener("change", this.adaptLayout);
+    Dimensions.addEventListener('change', this.adaptLayout);
   }
 
   adaptLayout = dimensions => {
@@ -50,14 +50,13 @@ class Course extends Component {
       <Container style={{ width: cardWidth }}>
         <Cover>
           <Image source={image} />
-          <Logo source={logo} resizeMode="contain" />
-          <Subtitle>{subtitle}</Subtitle>
+          <Logo source={logo} resizeMode='contain' />
           <Title>{title}</Title>
         </Cover>
         <Content>
           <Avatar source={avatar} />
           <Caption>{caption}</Caption>
-          <Author>Taught by {author}</Author>
+          <Author>{author}</Author>
         </Content>
       </Container>
     );

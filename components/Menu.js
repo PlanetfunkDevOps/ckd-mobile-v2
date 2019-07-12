@@ -1,25 +1,20 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import { Animated, TouchableOpacity, Dimensions } from "react-native";
-import { Icon } from "expo";
-import MenuItem from "./MenuItem";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import {
+  Animated,
+  TouchableOpacity,
+  Dimensions,
+  AsyncStorage
+} from 'react-native';
+import * as Icon from '@expo/vector-icons';
+import MenuItem from './MenuItem';
+import { connect } from 'react-redux';
+import { tapMenu } from '../actions/toggleMenuAction';
+import { updateName } from '../actions/updateNameAction';
+import { updateAvatar } from '../actions/updateNameAction';
 
-function mapStateToProps(state) {
-  return { action: state.action };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    closeMenu: () =>
-      dispatch({
-        type: "CLOSE_MENU"
-      })
-  };
-}
-
-const screenHeight = Dimensions.get("screen").height;
-const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 
 var cardWidth = screenWidth;
 if (screenWidth > 500) {
@@ -40,16 +35,31 @@ class Menu extends Component {
   }
 
   toggleMenu = () => {
-    if (this.props.action == "openMenu") {
+    if (this.props.openMenu == true) {
       Animated.spring(this.state.top, {
         toValue: 54
       }).start();
     }
 
-    if (this.props.action == "closeMenu") {
+    if (this.props.openMenu == false) {
       Animated.spring(this.state.top, {
         toValue: screenHeight
       }).start();
+    }
+  };
+
+  handlePress = () => {
+    this.props.tapMenu();
+  };
+
+  handleMenu = index => {
+    if (index === 3) {
+      this.props.tapMenu();
+      this.props.updateName('Usuario Invitado');
+      this.props.updateAvatar(
+        'https://image.shutterstock.com/image-vector/default-avatar-profile-icon-grey-260nw-518740717.jpg'
+      );
+      AsyncStorage.clear();
     }
   };
 
@@ -57,32 +67,39 @@ class Menu extends Component {
     return (
       <AnimatedContainer style={{ top: this.state.top }}>
         <Cover>
-          <Image source={require("../assets/background2.jpg")} />
-          <Title>Planetfunk</Title>
-          <Subtitle>Designer at CodiGo</Subtitle>
+          <Image source={require('../assets/food_bgh02.jpeg')} />
+          <Title>{this.props.userName}</Title>
+          <Subtitle>Desarrollador at CodiGo</Subtitle>
         </Cover>
         <TouchableOpacity
-          onPress={this.props.closeMenu}
+          onPress={this.handlePress}
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 120,
-            left: "50%",
+            left: '50%',
             marginLeft: -22,
             zIndex: 1
           }}
         >
           <CloseView>
-            <Icon.Ionicons name="ios-close" size={44} color="#546bfb" />
+            <Icon.Ionicons name='ios-close' size={44} color='#546bfb' />
           </CloseView>
         </TouchableOpacity>
         <Content>
           {items.map((item, index) => (
-            <MenuItem
+            <TouchableOpacity
               key={index}
-              icon={item.icon}
-              title={item.title}
-              text={item.text}
-            />
+              onPress={() => {
+                this.handleMenu(index);
+              }}
+            >
+              <MenuItem
+                key={index}
+                icon={item.icon}
+                title={item.title}
+                text={item.text}
+              />
+            </TouchableOpacity>
           ))}
         </Content>
       </AnimatedContainer>
@@ -90,9 +107,14 @@ class Menu extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  openMenu: state.openMenu.openMenu,
+  userName: state.userName.userName
+});
+
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  { tapMenu, updateName, updateAvatar }
 )(Menu);
 
 const Container = styled.View`
@@ -151,23 +173,23 @@ const CloseView = styled.View`
 
 const items = [
   {
-    icon: "ios-settings",
-    title: "Account",
-    text: "Settings"
+    icon: 'ios-settings',
+    title: 'Perfil',
+    text: 'Settings'
   },
   {
-    icon: "ios-card",
-    title: "Billing",
-    text: "payments"
+    icon: 'ios-card',
+    title: 'Pagos',
+    text: 'payments'
   },
   {
-    icon: "ios-compass",
-    title: "Learn React",
-    text: "start course"
+    icon: 'ios-compass',
+    title: 'Cupones',
+    text: 'start course'
   },
   {
-    icon: "ios-exit",
-    title: "Log Out",
-    text: "see you soon!"
+    icon: 'ios-exit',
+    title: 'Log Out',
+    text: 'see you soon!'
   }
 ];

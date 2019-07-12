@@ -1,37 +1,42 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import { TouchableOpacity, StatusBar, Dimensions } from "react-native";
-import { Icon } from "expo";
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import { TouchableOpacity, StatusBar, Dimensions } from 'react-native';
+import * as Icon from '@expo/vector-icons';
+import { PlayIcon } from '../components/Icons';
 
-const screenHeight = Dimensions.get("screen").height;
+const screenHeight = Dimensions.get('screen').height;
 
 class SectionScreen extends Component {
   static navigationOptions = {
     header: null
   };
 
-  componentDidMount() {
-    StatusBar.setBarStyle("light-content", true);
-  }
-
-  componentWillUnmount() {
-    StatusBar.setBarStyle("dark-content", true);
-  }
-
   render() {
     const { navigation } = this.props;
-    const section = navigation.getParam("section");
+    const section = navigation.getParam('section');
 
     return (
       <Container>
         <StatusBar hidden />
         <Cover>
-          <Image source={section.image} resizeMode="cover" />
+          <Image source={section.image} resizeMode='cover' />
+          <PlayWrapper>
+            <TouchableOpacity
+              underlayColor='transparent'
+              onPress={() => {
+                this.props.navigation.navigate('Video');
+              }}
+            >
+              <PlayView>
+                <PlayIcon style={{ marginLeft: -10 }} />
+              </PlayView>
+            </TouchableOpacity>
+          </PlayWrapper>
           <Wrapper>
             <Icon.Ionicons
-              name="ios-arrow-dropleft-circle"
+              name='ios-arrow-dropleft-circle'
               size={24}
-              color="#fff"
+              color='#fff'
             />
             <Subtitle>{section.speciality}</Subtitle>
           </Wrapper>
@@ -42,13 +47,13 @@ class SectionScreen extends Component {
           onPress={() => {
             this.props.navigation.goBack();
           }}
-          style={{ position: "absolute", top: 35, right: 20 }}
+          style={{ position: 'absolute', top: 35, right: 20 }}
         >
           <CloseView>
             <Icon.Ionicons
-              name="ios-close"
+              name='ios-close'
               size={44}
-              color="#fff"
+              color='#fff'
               style={{ marginTop: -2 }}
             />
           </CloseView>
@@ -122,4 +127,21 @@ const Subtitle = styled.Text`
   color: rgba(255, 255, 255, 0.8);
   margin-left: 10px;
   text-transform: uppercase;
+`;
+
+const PlayWrapper = styled.View`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -40px;
+  margin-left: -40px;
+`;
+
+const PlayView = styled.View`
+  width: 80px;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 40px;
+  justify-content: center;
+  align-items: center;
 `;

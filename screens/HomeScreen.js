@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   ScrollView,
   SafeAreaView,
@@ -6,28 +6,18 @@ import {
   Animated,
   Easing,
   StatusBar
-} from "react-native";
-import styled from "styled-components";
-import Card from "../components/Card";
-import { NotificationIcon } from "../components/Icons";
-import Logo from "../components/Logo";
-import Course from "../components/Course";
-import Menu from "../components/Menu";
-import { connect } from "react-redux";
-import Avatar from "../components/Avatar";
-
-function mapStateToProps(state) {
-  return { action: state.action, name: state.name };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    openMenu: () =>
-      dispatch({
-        type: "OPEN_MENU"
-      })
-  };
-}
+} from 'react-native';
+import styled from 'styled-components';
+import Card from '../components/Card';
+import { NotificationIcon } from '../components/Icons';
+import Logo from '../components/Logo';
+import Course from '../components/Course';
+import Menu from '../components/Menu';
+import { connect } from 'react-redux';
+import Avatar from '../components/Avatar';
+import { tapMenu } from '../actions/toggleMenuAction';
+import ModalLogin from '../components/ModalLogin';
+import { openLogin } from '../actions/loginAction';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -40,7 +30,7 @@ class HomeScreen extends Component {
   };
 
   componentDidMount() {
-    StatusBar.setBarStyle("light-content", true);
+    StatusBar.setBarStyle('light-content', true);
   }
 
   componentDidUpdate() {
@@ -48,7 +38,7 @@ class HomeScreen extends Component {
   }
 
   toggleMenu = () => {
-    if (this.props.action == "openMenu") {
+    if (this.props.openMenu == true) {
       Animated.timing(this.state.scale, {
         toValue: 0.9,
         duration: 300,
@@ -58,10 +48,10 @@ class HomeScreen extends Component {
         toValue: 0.5
       }).start();
 
-      StatusBar.setBarStyle("light-content", true);
+      /* StatusBar.setBarStyle('light-content', true); */
     }
 
-    if (this.props.action == "closeMenu") {
+    if (this.props.openMenu == false) {
       Animated.timing(this.state.scale, {
         toValue: 1,
         duration: 300,
@@ -71,14 +61,19 @@ class HomeScreen extends Component {
         toValue: 1
       }).start();
 
-      StatusBar.setBarStyle("dark-content", true);
+      /* StatusBar.setBarStyle('dark-content', true); */
+    }
+  };
+
+  handlePress = () => {
+    if (this.props.userName !== 'Usuario Invitado') {
+      this.props.tapMenu();
+    } else {
+      this.props.openLogin();
     }
   };
 
   render() {
-    console.log("props", this.props);
-    console.log("state", this.state);
-
     return (
       <RootView>
         <Menu />
@@ -89,24 +84,24 @@ class HomeScreen extends Component {
           }}
         >
           <SafeAreaView>
-            <ScrollView style={{ height: "100%" }}>
-              <CoverImage source={require("../assets/dark_bg2.jpeg")} />
+            <ScrollView style={{ height: '100%' }}>
+              <CoverImage source={require('../assets/dark_bg2.jpeg')} />
               <TitleBar>
                 <TouchableOpacity
-                  onPress={this.props.openMenu}
-                  style={{ position: "absolute", top: 0, left: 20 }}
+                  onPress={this.handlePress}
+                  style={{ position: 'absolute', top: 0, left: 20 }}
                 >
                   <Avatar />
                 </TouchableOpacity>
-                <Title>Welcome Back!</Title>
-                <Name>{this.props.name}</Name>
+                <Title>Bienvenido</Title>
+                <Name>{this.props.userName}</Name>
                 <NotificationIcon
-                  style={{ position: "absolute", right: 20, top: 5 }}
+                  style={{ position: 'absolute', right: 20, top: 5 }}
                 />
               </TitleBar>
               <ScrollView
                 style={{
-                  flexDirection: "row",
+                  flexDirection: 'row',
                   padding: 20,
                   paddingLeft: 12,
                   paddingTop: 30
@@ -127,7 +122,7 @@ class HomeScreen extends Component {
                 {card.map((card, index) => (
                   <TouchableOpacity
                     onPress={() => {
-                      this.props.navigation.push("Section", {
+                      this.props.navigation.push('Section', {
                         section: card
                       });
                     }}
@@ -143,7 +138,7 @@ class HomeScreen extends Component {
                   </TouchableOpacity>
                 ))}
               </ScrollView>
-              <Subtitle>Popular Courses</Subtitle>
+              <Subtitle>Servicios Especiales</Subtitle>
               <CoursesContainer>
                 {courses.map((course, index) => (
                   <Course
@@ -161,14 +156,21 @@ class HomeScreen extends Component {
             </ScrollView>
           </SafeAreaView>
         </AnimatedContainer>
+        <ModalLogin />
       </RootView>
     );
   }
 }
 
+const mapStateToProps = state => ({
+  openMenu: state.openMenu.openMenu,
+  userName: state.userName.userName,
+  loginModal: state.loginModal.loginModal
+});
+
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  { tapMenu, openLogin }
 )(HomeScreen);
 
 const RootView = styled.View`
@@ -228,90 +230,89 @@ const CoursesContainer = styled.View`
 
 const logos = [
   {
-    image: require("../assets/how-ingredients-1.png"),
-    text: "Desayuno"
+    image: require('../assets/how-ingredients-1.png'),
+    text: 'Desayuno'
   },
   {
-    image: require("../assets/how-home-2.png"),
-    text: "Almuerzo"
+    image: require('../assets/how-home-2.png'),
+    text: 'Almuerzo'
   },
   {
-    image: require("../assets/how-menu-3.png"),
-    text: "Cena"
+    image: require('../assets/how-menu-3.png'),
+    text: 'Cena'
   },
   {
-    image: require("../assets/how-clean-4.png"),
-    text: "#Copa America"
+    image: require('../assets/how-clean-4.png'),
+    text: '#Copa America'
   }
 ];
 
 const card = [
   {
-    dish: "Lomo Saltado",
-    image: require("../assets/food_bgv03.jpeg"),
-    speciality: "Cocina Criolla",
-    chef: "Jaim del Mar",
-    logo: require("../assets/logo-react.png")
+    dish: 'Lomo Saltado',
+    image: require('../assets/food_bgv03.jpeg'),
+    speciality: 'Cocina Criolla',
+    chef: 'Jaim del Mar',
+    logo: require('../assets/logo-react.png')
   },
   {
-    dish: "Sanshiku",
-    image: require("../assets/food_bgv01.jpeg"),
-    speciality: "Cocina Nikkei",
-    chef: "Luis Sandoval",
-    logo: require("../assets/logo-react.png")
+    dish: 'Sanshiku',
+    image: require('../assets/food_bgv01.jpeg'),
+    speciality: 'Cocina Nikkei',
+    chef: 'Luis Sandoval',
+    logo: require('../assets/logo-react.png')
   },
   {
-    dish: "Calabacin Relleno",
-    image: require("../assets/food_bgv07.jpeg"),
-    speciality: "Cocina Vegetariana",
-    chef: "Maria Martinez",
-    logo: require("../assets/logo-react.png")
+    dish: 'Calabacin Relleno',
+    image: require('../assets/food_bgv07.jpeg'),
+    speciality: 'Cocina Vegetariana',
+    chef: 'Maria Martinez',
+    logo: require('../assets/logo-react.png')
   },
   {
-    dish: "Chocolate Cake",
-    image: require("../assets/food_bgv05.jpeg"),
-    speciality: "Patissier",
-    chef: "Virgilio Martinez",
-    logo: require("../assets/logo-react.png")
+    dish: 'Chocolate Cake',
+    image: require('../assets/food_bgv05.jpeg'),
+    speciality: 'Patissier',
+    chef: 'Virgilio Martinez',
+    logo: require('../assets/logo-react.png')
   }
 ];
 
 const courses = [
   {
-    title: "Prototype in InVision Studio",
-    subtitle: "10 sections",
-    image: require("../assets/background13.jpg"),
-    logo: require("../assets/logo-studio.png"),
-    author: "Planetfunk",
-    avatar: require("../assets/avatar.jpg"),
-    caption: "Design and interactive prototype"
+    title: 'Chef en Casa',
+    subtitle: '10 sections',
+    image: require('../assets/service-home-1.jpg'),
+    logo: require('../assets/how-ingredients-1.png'),
+    author: 'Cook On Demand',
+    avatar: require('../assets/avatar-default.jpg'),
+    caption: 'Para esas ocaciones especiales'
   },
   {
-    title: "React for Designes",
-    subtitle: "12 sections",
-    image: require("../assets/background11.jpg"),
-    logo: require("../assets/logo-react.png"),
-    author: "Planetfunk",
-    avatar: require("../assets/avatar.jpg"),
-    caption: "Learn to design and code a React site"
+    title: 'Chef para Vacaciones',
+    subtitle: '12 sections',
+    image: require('../assets/service-vacation-2.jpg'),
+    logo: require('../assets/how-home-2.png'),
+    author: 'Cook On Demand',
+    avatar: require('../assets/avatar-default.jpg'),
+    caption: 'Despreocupate por cocinar en vacaciones'
   },
   {
-    title: "Design and Code with Framer X",
-    subtitle: "10 sections",
-    image: require("../assets/background14.jpg"),
-    logo: require("../assets/logo-framerx.png"),
-    author: "Planetfunk",
-    avatar: require("../assets/avatar.jpg"),
-    caption: "Create pwerful design and code for your app"
+    title: 'Chef Permanente',
+    subtitle: '10 sections',
+    image: require('../assets/service-permanent-3.jpg'),
+    logo: require('../assets/how-menu-3.png'),
+    author: 'Cook On Demand',
+    avatar: require('../assets/avatar-default.jpg'),
+    caption: 'Encuentra ese chef especial'
   },
   {
-    title: "Design Sysyem in Figma",
-    subtitle: "10 sections",
-    image: require("../assets/background6.jpg"),
-    logo: require("../assets/logo-figma.png"),
-    author: "Planetfunk",
-    avatar: require("../assets/avatar.jpg"),
-    caption:
-      "Complete guide to designing a site using a collaborative design tool"
+    title: 'Publicidad y Marketing',
+    subtitle: '10 sections',
+    image: require('../assets/service-marketing-5.jpg'),
+    logo: require('../assets/how-clean-4.png'),
+    author: 'Cook On Demand',
+    avatar: require('../assets/avatar-default.jpg'),
+    caption: 'Contactanos y promociona tu negocio'
   }
 ];

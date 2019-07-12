@@ -8,17 +8,19 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "apollo-boost": "^0.4.3",
     "expo": "^33.0.0",
-    "graphql": "^14.4.2",
+    "firebase": "^6.2.4",
+    "lottie-react-native": "^3.0.1",
     "react": "16.8.3",
-    "react-apollo": "^2.5.8",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.0",
-    "react-redux": "^7.1.0",
+    "react-redux": "^5.0.7",
+    "react-redux-firebase": "^2.2.6",
     "redux": "^4.0.1",
+    "redux-auth-wrapper": "^2.1.0",
+    "redux-firestore": "^0.8.0",
     "styled-components": "^4.3.2"
   },
   "devDependencies": {

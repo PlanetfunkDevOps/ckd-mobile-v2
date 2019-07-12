@@ -9,8 +9,8 @@
     "orientation": "default",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/ckd-logo.png",
+      "resizeMode": "cover",
       "backgroundColor": "#f0f3f5"
     },
     "updates": {
