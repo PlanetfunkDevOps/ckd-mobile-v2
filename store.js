@@ -10,13 +10,7 @@ import loginReducer from './reducers/loginReducer';
 
 /* Firebase config */
 const firebaseConfig = {
-  apiKey: 'AIzaSyBTI-rQGu3PvECS3I6Uflb0tIT5rXcpZ5E',
-  authDomain: 'cookondemand-95c24.firebaseapp.com',
-  databaseURL: 'https://cookondemand-95c24.firebaseio.com',
-  projectId: 'cookondemand-95c24',
-  storageBucket: 'cookondemand-95c24.appspot.com',
-  messagingSenderId: '351355206454',
-  appId: '1:351355206454:web:2ac399d69ca380b4'
+  /* Your firebae key goes here */
 };
 
 /* react-redux-firebase config */
